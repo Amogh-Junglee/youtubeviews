@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"YoutubeViews/db"
-	models "YoutubeViews/models"
+	"YoutubeViews/models"
 
 	"github.com/redis/go-redis/v9"
 )

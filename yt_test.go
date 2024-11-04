@@ -103,9 +103,9 @@ func TestIncrementAndGetWithCache(t *testing.T) {
 				t.Errorf("Increment() error = %v", err)
 			}
 
-			_, error := svc.Get(context.Background(), models.ViewCountPayload{VideoID: tt.videoID})
-			if error != nil {
-				t.Errorf("Get() error = %v", error)
+			_, getError := svc.Get(context.Background(), models.ViewCountPayload{VideoID: tt.videoID})
+			if getError != nil {
+				t.Errorf("Get() error = %v", getError)
 			}
 
 			if result.Views != tt.wantViews {
@@ -163,7 +163,7 @@ func TestGetTopVideosWithCache(t *testing.T) {
 
 			if !slicesOfMapsEqual(result.TopVideos, tt.wantVideos) {
 				t.Errorf("GetTopVideos() = %+v, want %+v", result.TopVideos, tt.wantVideos)
-				debugDeepEqual(result.TopVideos, tt.wantVideos)
+				// debugDeepEqual(result.TopVideos, tt.wantVideos)
 			} else {
 				fmt.Println("GetTopVideos() matches expected output.")
 			}

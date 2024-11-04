@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	mocks "YoutubeViews/db/mocks"
+	"YoutubeViews/db/mocks"
 	"YoutubeViews/models"
 
 	"github.com/golang/mock/gomock"

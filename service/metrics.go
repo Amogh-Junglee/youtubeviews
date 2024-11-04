@@ -1,7 +1,7 @@
 package service
 
 import (
-	models "YoutubeViews/models"
+	"YoutubeViews/models"
 	"context"
 	"log"
 	"time"
@@ -17,7 +17,6 @@ func NewMetricsService(inner Service) *MetricsService {
 
 func (m *MetricsService) Increment(ctx context.Context, req models.IncrementPayload) (models.IncrementViewResponse, error) {
 	startTime := time.Now()
-
 	defer func() {
 		duration := time.Since(startTime)
 		log.Printf("Increment for VideoID %s took %v", req.VideoID, duration)
@@ -28,7 +27,6 @@ func (m *MetricsService) Increment(ctx context.Context, req models.IncrementPayl
 
 func (m *MetricsService) Get(ctx context.Context, req models.ViewCountPayload) (models.ViewCountResponse, error) {
 	startTime := time.Now()
-
 	defer func() {
 		duration := time.Since(startTime)
 		log.Printf("Get for VideoID %s took %v", req.VideoID, duration)

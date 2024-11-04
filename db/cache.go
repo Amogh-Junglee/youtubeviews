@@ -57,7 +57,7 @@ func (c *CacheRepo) Get(ctx context.Context, req models.ViewCountPayload) (model
 		}
 		log.Printf("Cache: %v\n", cachedResp)
 		// Handle error if type assertion fails
-		return models.ViewCountResponse{}, fmt.Errorf("failed to typecast cached response to IncrementViewResponse")
+		return models.ViewCountResponse{}, fmt.Errorf("failed to type assert cached response to IncrementViewResponse")
 	}
 
 	// If cache miss, delegate to the RedisRepo
@@ -71,6 +71,7 @@ func (c *CacheRepo) Get(ctx context.Context, req models.ViewCountPayload) (model
 	return resp, nil
 }
 
+// GetTopVideos retrieves the top videos based on the provided payload.
 func (c *CacheRepo) GetTopVideos(ctx context.Context, req models.GetTopVideosPayload) (models.GetTopVideosResponse, error) {
 	return c.delegate.GetTopVideos(ctx, req)
 }

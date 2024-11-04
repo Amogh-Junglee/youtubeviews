@@ -5,6 +5,7 @@ import (
 	"context"
 
 	"github.com/redis/go-redis/v9"
+	"math"
 )
 
 type RedisRepo struct {
@@ -29,7 +30,7 @@ func (r *RedisRepo) Increment(ctx context.Context, req models.IncrementPayload) 
 	}
 
 	return models.IncrementViewResponse{
-		Views:   int(count),
+		Views:   int(math.Round(count)),
 		Increment: 1,
 	}, nil
 }

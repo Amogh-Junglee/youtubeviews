@@ -1,7 +1,7 @@
 package service
 
 import (
-	models "YoutubeViews/models"
+	"YoutubeViews/models"
 	"context"
 )
 
