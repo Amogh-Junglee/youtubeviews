@@ -3,6 +3,7 @@ package db
 import (
 	"context"
 	"fmt"
+	"log"
 
 	"YoutubeViews/models"
 )
@@ -51,12 +52,12 @@ func (c *CacheRepo) Get(ctx context.Context, req models.ViewCountPayload) (model
 	// Get from cache
 	if cachedResp, ok := c.cache.Get(req.VideoID); ok {
 		if viewCount, ok := cachedResp.(models.IncrementViewResponse); ok {
-			fmt.Println("ViewCount: ", viewCount)
+			log.Printf("ViewCount: %v\n", viewCount)
 			return models.ViewCountResponse{Views: viewCount.Views}, nil
 		}
-		fmt.Println("Cache : ", cachedResp)
+		log.Printf("Cache: %v\n", cachedResp)
 		// Handle error if type assertion fails
-		return models.ViewCountResponse{}, fmt.Errorf("failed to typecast cached response to ViewCountResponse")
+		return models.ViewCountResponse{}, fmt.Errorf("failed to typecast cached response to IncrementViewResponse")
 	}
 
 	// If cache miss, delegate to the RedisRepo
