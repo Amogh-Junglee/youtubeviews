@@ -34,7 +34,7 @@ func TestVideoService_Increment(t *testing.T) {
 
 	mockRepo.EXPECT().Increment(ctx, req).Return(models.IncrementViewResponse{Views: 1, Increment: 1}, nil)
 
-	resp, err := videoService.Increment(ctx, req)
+	resp, err := videoService.Increment(ctx, req.VideoID)
 	assert.NoError(t, err)
 	assert.True(t, resp.Increment == 1)
 }
@@ -51,7 +51,7 @@ func TestVideoService_Get(t *testing.T) {
 
 	mockRepo.EXPECT().Get(ctx, req).Return(models.ViewCountResponse{Views: 100}, nil)
 
-	resp, err := videoService.Get(ctx, req)
+	resp, err := videoService.Get(ctx, req.VideoID)
 	assert.NoError(t, err)
 	assert.Equal(t, 100, resp.Views)
 }
@@ -68,7 +68,7 @@ func TestVideoService_GetTopVideos(t *testing.T) {
 
 	mockRepo.EXPECT().GetTopVideos(ctx, req).Return(models.GetTopVideosResponse{TopVideos: []map[string]interface{}{{"ID": "123", "Views": 1000}}}, nil)
 
-	resp, err := videoService.GetTopVideos(ctx, req)
+	resp, err := videoService.GetTopVideos(ctx, req.Page, req.Limit)
 	assert.NoError(t, err)
 	assert.Len(t, resp.TopVideos, 1)
 	topVideo := resp.TopVideos[0]

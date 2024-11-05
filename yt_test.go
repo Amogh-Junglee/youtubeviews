@@ -1,12 +1,11 @@
 package main
 
 import (
-	models "youtubeviews/models"
-	service "youtubeviews/service"
 	"context"
 	"fmt"
 	"reflect"
 	"testing"
+	service "youtubeviews/service"
 
 	"github.com/redis/go-redis/v9"
 )
@@ -98,12 +97,12 @@ func TestIncrementAndGetWithCache(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.videoID, func(t *testing.T) {
-			result, err := svc.Increment(context.Background(), models.IncrementPayload{VideoID: tt.videoID})
+			result, err := svc.Increment(context.Background(), tt.videoID)
 			if err != nil {
 				t.Errorf("Increment() error = %v", err)
 			}
 
-			_, getError := svc.Get(context.Background(), models.ViewCountPayload{VideoID: tt.videoID})
+			_, getError := svc.Get(context.Background(), tt.videoID)
 			if getError != nil {
 				t.Errorf("Get() error = %v", getError)
 			}
@@ -134,7 +133,7 @@ func TestGetTopVideosWithCache(t *testing.T) {
 	videoIDs := []string{"video1", "video2", "video3"}
 	for _, videoID := range videoIDs {
 		for i := 0; i < 3; i++ {
-			svc.Increment(context.Background(), models.IncrementPayload{VideoID: videoID})
+			svc.Increment(context.Background(), videoID)
 		}
 	}
 
@@ -156,7 +155,7 @@ func TestGetTopVideosWithCache(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			result, err := svc.GetTopVideos(context.Background(), models.GetTopVideosPayload{Limit: 3, Page: 1})
+			result, err := svc.GetTopVideos(context.Background(), 1, 3)
 			if err != nil {
 				t.Fatalf("GetTopVideos() error = %v", err)
 			}

@@ -1,11 +1,12 @@
 package db
 
 import (
-	"youtubeviews/models"
 	"context"
+	"youtubeviews/models"
+
+	"math"
 
 	"github.com/redis/go-redis/v9"
-	"math"
 )
 
 type RedisRepo struct {
@@ -16,28 +17,28 @@ func NewRedisRepo(client *redis.Client) DbRepo {
 	return &RedisRepo{client: client}
 }
 
-func (r *RedisRepo) Increment(ctx context.Context, req models.IncrementPayload) (models.IncrementViewResponse, error) {
+func (r *RedisRepo) Increment(ctx context.Context, videoId string) (models.IncrementViewResponse, error) {
 	// Increment video views in Redis
-	err := r.client.ZIncrBy(ctx, "video_views", 1, req.VideoID).Err()
+	err := r.client.ZIncrBy(ctx, "video_views", 1, videoId).Err()
 	if err != nil {
 		return models.IncrementViewResponse{}, err
 	}
 
 	// Fetch the updated score
-	count, err := r.client.ZScore(ctx, "video_views", req.VideoID).Result()
+	count, err := r.client.ZScore(ctx, "video_views", videoId).Result()
 	if err != nil {
 		return models.IncrementViewResponse{}, err
 	}
 
 	return models.IncrementViewResponse{
-		Views:   int(math.Round(count)),
+		Views:     int(math.Round(count)),
 		Increment: 1,
 	}, nil
 }
 
-func (r *RedisRepo) Get(ctx context.Context, req models.ViewCountPayload) (models.ViewCountResponse, error) {
+func (r *RedisRepo) Get(ctx context.Context, videoId string) (models.ViewCountResponse, error) {
 	// Fetch view count from Redis
-	count, err := r.client.ZScore(ctx, "video_views", req.VideoID).Result()
+	count, err := r.client.ZScore(ctx, "video_views", videoId).Result()
 	if err == redis.Nil {
 		return models.ViewCountResponse{}, nil // video not found
 	} else if err != nil {
@@ -45,14 +46,14 @@ func (r *RedisRepo) Get(ctx context.Context, req models.ViewCountPayload) (model
 	}
 
 	return models.ViewCountResponse{
-		Views:   int(count),
+		Views: int(count),
 	}, nil
 }
 
-func (r *RedisRepo) GetTopVideos(ctx context.Context, req models.GetTopVideosPayload) (models.GetTopVideosResponse, error) {
+func (r *RedisRepo) GetTopVideos(ctx context.Context, page int, limit int) (models.GetTopVideosResponse, error) {
 	// Fetch top videos from Redis
-	start := (req.Page - 1) * req.Limit
-	end := start + req.Limit - 1
+	start := (page - 1) * limit
+	end := start + limit - 1
 
 	topVideos, err := r.client.ZRevRangeWithScores(ctx, "video_views", int64(start), int64(end)).Result()
 	if err != nil {

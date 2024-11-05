@@ -36,9 +36,9 @@ func (m *MockDbRepo) EXPECT() *MockDbRepoMockRecorder {
 }
 
 // Get mocks base method.
-func (m *MockDbRepo) Get(ctx context.Context, req models.ViewCountPayload) (models.ViewCountResponse, error) {
+func (m *MockDbRepo) Get(ctx context.Context, videoId string) (models.ViewCountResponse, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Get", ctx, req)
+	ret := m.ctrl.Call(m, "Get", ctx, videoId)
 	ret0, _ := ret[0].(models.ViewCountResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
@@ -51,9 +51,9 @@ func (mr *MockDbRepoMockRecorder) Get(ctx, req interface{}) *gomock.Call {
 }
 
 // GetTopVideos mocks base method.
-func (m *MockDbRepo) GetTopVideos(ctx context.Context, req models.GetTopVideosPayload) (models.GetTopVideosResponse, error) {
+func (m *MockDbRepo) GetTopVideos(ctx context.Context, page int, limit int) (models.GetTopVideosResponse, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetTopVideos", ctx, req)
+	ret := m.ctrl.Call(m, "GetTopVideos", ctx, page, limit)
 	ret0, _ := ret[0].(models.GetTopVideosResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
@@ -66,9 +66,9 @@ func (mr *MockDbRepoMockRecorder) GetTopVideos(ctx, req interface{}) *gomock.Cal
 }
 
 // Increment mocks base method.
-func (m *MockDbRepo) Increment(ctx context.Context, req models.IncrementPayload) (models.IncrementViewResponse, error) {
+func (m *MockDbRepo) Increment(ctx context.Context, videoId string) (models.IncrementViewResponse, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Increment", ctx, req)
+	ret := m.ctrl.Call(m, "Increment", ctx, videoId)
 	ret0, _ := ret[0].(models.IncrementViewResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1

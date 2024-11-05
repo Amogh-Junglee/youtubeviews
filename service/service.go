@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"fmt"
 
 	"youtubeviews/db"
 	"youtubeviews/models"
@@ -23,14 +24,26 @@ func CreateNewVideoService(redisClient *redis.Client, capacity int) *VideoServic
 	return &VideoService{repo: cacheRepo}
 }
 
-func (videoService *VideoService) Increment(ctx context.Context, req models.IncrementPayload) (models.IncrementViewResponse, error) {
-	return videoService.repo.Increment(ctx, req)
+func (videoService *VideoService) Increment(ctx context.Context, videoId string) (models.IncrementViewResponse, error) {
+	// Validate that the VideoID is provided
+	if videoId == "" {
+		return models.IncrementViewResponse{}, fmt.Errorf("videoId is required")
+	}
+
+	return videoService.repo.Increment(ctx, videoId)
 }
 
-func (videoService *VideoService) Get(ctx context.Context, req models.ViewCountPayload) (models.ViewCountResponse, error) {
-	return videoService.repo.Get(ctx, req)
+func (videoService *VideoService) Get(ctx context.Context, videoId string) (models.ViewCountResponse, error) {
+	if videoId == "" {
+		return models.ViewCountResponse{}, fmt.Errorf("videoId is required")
+	}
+
+	return videoService.repo.Get(ctx, videoId)
 }
 
-func (videoService *VideoService) GetTopVideos(ctx context.Context, req models.GetTopVideosPayload) (models.GetTopVideosResponse, error) {
-	return videoService.repo.GetTopVideos(ctx, req)
+func (videoService *VideoService) GetTopVideos(ctx context.Context, page int, limit int) (models.GetTopVideosResponse, error) {
+	if page < 1{
+		return models.GetTopVideosResponse{}, fmt.Errorf("page must be greater than 0")
+	}
+	return videoService.repo.GetTopVideos(ctx, page, limit)
 }

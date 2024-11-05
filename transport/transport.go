@@ -19,13 +19,13 @@ func NewHttpTransport(service service.Service) *HttpTransport {
 func (t *HttpTransport) Increment(writer http.ResponseWriter, request *http.Request) {
 	// Declare a variable to hold the request payload
 	var req models.IncrementPayload
+	defer request.Body.Close()
 
 	// Check if the request body is empty
 	if request.Body == nil {
 		http.Error(writer, "empty request body", http.StatusBadRequest)
 		return
 	}
-	defer request.Body.Close()
 
 	// Decode the request body into the payload struct
 	if err := json.NewDecoder(request.Body).Decode(&req); err != nil {
@@ -33,14 +33,8 @@ func (t *HttpTransport) Increment(writer http.ResponseWriter, request *http.Requ
 		return
 	}
 
-	// Validate that the VideoID is provided
-	if req.VideoID == "" {
-		http.Error(writer, "videoId is required", http.StatusBadRequest)
-		return
-	}
-
 	// Call the service to increment the view count
-	response, err := t.service.Increment(request.Context(), req)
+	response, err := t.service.Increment(request.Context(), req.VideoID)
 	if err != nil {
 		http.Error(writer, err.Error(), http.StatusInternalServerError)
 		return
@@ -64,12 +58,7 @@ func (t *HttpTransport) Get(writer http.ResponseWriter, request *http.Request) {
 		return
 	}
 
-	if req.VideoID == "" {
-		http.Error(writer, "videoId is required", http.StatusBadRequest)
-		return
-	}
-
-	response, err := t.service.Get(request.Context(), req)
+	response, err := t.service.Get(request.Context(), req.VideoID)
 	if err != nil {
 		http.Error(writer, err.Error(), http.StatusInternalServerError)
 		return
@@ -99,7 +88,7 @@ func (t *HttpTransport) GetTopVideos(writer http.ResponseWriter, request *http.R
 	}
 
 	// Call the service to get the top videos
-	response, err := t.service.GetTopVideos(request.Context(), req)
+	response, err := t.service.GetTopVideos(request.Context(), req.Page, req.Limit)
 	if err != nil {
 		http.Error(writer, err.Error(), http.StatusInternalServerError)
 		return

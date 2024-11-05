@@ -1,10 +1,10 @@
 package service
 
 import (
-	"youtubeviews/models"
 	"context"
 	"log"
 	"time"
+	"youtubeviews/models"
 )
 
 type MetricsService struct {
@@ -15,30 +15,30 @@ func NewMetricsService(inner Service) *MetricsService {
 	return &MetricsService{service: inner}
 }
 
-func (m *MetricsService) Increment(ctx context.Context, req models.IncrementPayload) (models.IncrementViewResponse, error) {
+func (m *MetricsService) Increment(ctx context.Context, videoId string) (models.IncrementViewResponse, error) {
 	startTime := time.Now()
 	defer func() {
 		duration := time.Since(startTime)
-		log.Printf("Increment for VideoID %s took %v", req.VideoID, duration)
+		log.Printf("Increment for VideoID %s took %v", videoId, duration)
 	}()
 
-	return m.service.Increment(ctx, req)
+	return m.service.Increment(ctx, videoId)
 }
 
-func (m *MetricsService) Get(ctx context.Context, req models.ViewCountPayload) (models.ViewCountResponse, error) {
+func (m *MetricsService) Get(ctx context.Context, videoId string) (models.ViewCountResponse, error) {
 	startTime := time.Now()
 	defer func() {
 		duration := time.Since(startTime)
-		log.Printf("Get for VideoID %s took %v", req.VideoID, duration)
+		log.Printf("Get for VideoID %s took %v", videoId, duration)
 	}()
 
-	return m.service.Get(ctx, req)
+	return m.service.Get(ctx, videoId)
 }
 
-func (m *MetricsService) GetTopVideos(ctx context.Context, req models.GetTopVideosPayload) (models.GetTopVideosResponse, error) {
+func (m *MetricsService) GetTopVideos(ctx context.Context, page int, limit int) (models.GetTopVideosResponse, error) {
 	startTime := time.Now()
 
-	resp, err := m.service.GetTopVideos(ctx, req)
+	resp, err := m.service.GetTopVideos(ctx, page, limit)
 
 	duration := time.Since(startTime)
 	logMetrics("GetTopVideos", duration, err)
