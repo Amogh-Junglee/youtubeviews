@@ -2,11 +2,10 @@ package db
 
 import (
 	"context"
-	"youtubeviews/models"
 )
 
 type DbRepo interface {
-	Increment(ctx context.Context, videoId string) (models.IncrementViewResponse, error)
-	Get(ctx context.Context, videoId string) (models.ViewCountResponse, error)
-	GetTopVideos(ctx context.Context, page int, limit int) (models.GetTopVideosResponse, error)
+	Increment(ctx context.Context, videoId string) (views int, increment int, err error)
+	Get(ctx context.Context, videoId string) (views int, err error)
+	GetTopVideos(ctx context.Context, page int, limit int) (topVideos []map[string]interface{}, err error)
 }

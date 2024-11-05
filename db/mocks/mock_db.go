@@ -5,7 +5,6 @@
 package mocks
 
 import (
-	models "youtubeviews/models"
 	context "context"
 	reflect "reflect"
 
@@ -36,10 +35,10 @@ func (m *MockDbRepo) EXPECT() *MockDbRepoMockRecorder {
 }
 
 // Get mocks base method.
-func (m *MockDbRepo) Get(ctx context.Context, videoId string) (models.ViewCountResponse, error) {
+func (m *MockDbRepo) Get(ctx context.Context, videoId string) (views int, err error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Get", ctx, videoId)
-	ret0, _ := ret[0].(models.ViewCountResponse)
+	ret0, _ := ret[0].(int)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -51,27 +50,28 @@ func (mr *MockDbRepoMockRecorder) Get(ctx, req interface{}) *gomock.Call {
 }
 
 // GetTopVideos mocks base method.
-func (m *MockDbRepo) GetTopVideos(ctx context.Context, page int, limit int) (models.GetTopVideosResponse, error) {
+func (m *MockDbRepo) GetTopVideos(ctx context.Context, page int, limit int) (topVideos []map[string]interface{},err error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetTopVideos", ctx, page, limit)
-	ret0, _ := ret[0].(models.GetTopVideosResponse)
+	ret0, _ := ret[0].([]map[string]interface{})
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // GetTopVideos indicates an expected call of GetTopVideos.
-func (mr *MockDbRepoMockRecorder) GetTopVideos(ctx, req interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetTopVideos", reflect.TypeOf((*MockDbRepo)(nil).GetTopVideos), ctx, req)
+func (mr *MockDbRepoMockRecorder) GetTopVideos(ctx, page, limit interface{}) *gomock.Call {
+    mr.mock.ctrl.T.Helper()
+    return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetTopVideos", reflect.TypeOf((*MockDbRepo)(nil).GetTopVideos), ctx, page, limit)
 }
 
 // Increment mocks base method.
-func (m *MockDbRepo) Increment(ctx context.Context, videoId string) (models.IncrementViewResponse, error) {
+func (m *MockDbRepo) Increment(ctx context.Context, videoId string) (views int, increment int, err error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Increment", ctx, videoId)
-	ret0, _ := ret[0].(models.IncrementViewResponse)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	ret0, _ := ret[0].(int)
+	ret1, _ := ret[1].(int)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
 }
 
 // Increment indicates an expected call of Increment.

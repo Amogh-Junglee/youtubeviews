@@ -5,7 +5,6 @@ import (
 	"testing"
 
 	"youtubeviews/db/mocks"
-	"youtubeviews/models"
 
 	"github.com/golang/mock/gomock"
 	"github.com/redis/go-redis/v9"
@@ -30,13 +29,14 @@ func TestVideoService_Increment(t *testing.T) {
 	videoService := &VideoService{repo: mockRepo}
 
 	ctx := context.Background()
-	req := models.IncrementPayload{VideoID: "123"}
+	req := "123"
 
-	mockRepo.EXPECT().Increment(ctx, req).Return(models.IncrementViewResponse{Views: 1, Increment: 1}, nil)
+	mockRepo.EXPECT().Increment(ctx, req).Return(1,1, nil)
 
-	resp, err := videoService.Increment(ctx, req.VideoID)
+	views, increment, err := videoService.Increment(ctx, req)
 	assert.NoError(t, err)
-	assert.True(t, resp.Increment == 1)
+	assert.Greater(t, views, 0)
+	assert.True(t, increment == 1)
 }
 
 func TestVideoService_Get(t *testing.T) {
@@ -47,13 +47,13 @@ func TestVideoService_Get(t *testing.T) {
 	videoService := &VideoService{repo: mockRepo}
 
 	ctx := context.Background()
-	req := models.ViewCountPayload{VideoID: "123"}
+	req := "123"
 
-	mockRepo.EXPECT().Get(ctx, req).Return(models.ViewCountResponse{Views: 100}, nil)
+	mockRepo.EXPECT().Get(ctx, req).Return(100, nil)
 
-	resp, err := videoService.Get(ctx, req.VideoID)
+	views, err := videoService.Get(ctx, req)
 	assert.NoError(t, err)
-	assert.Equal(t, 100, resp.Views)
+	assert.Equal(t, 100, views)
 }
 
 func TestVideoService_GetTopVideos(t *testing.T) {
@@ -64,14 +64,14 @@ func TestVideoService_GetTopVideos(t *testing.T) {
 	videoService := &VideoService{repo: mockRepo}
 
 	ctx := context.Background()
-	req := models.GetTopVideosPayload{Limit: 10}
+	page,limit := 1,10
 
-	mockRepo.EXPECT().GetTopVideos(ctx, req).Return(models.GetTopVideosResponse{TopVideos: []map[string]interface{}{{"ID": "123", "Views": 1000}}}, nil)
+	mockRepo.EXPECT().GetTopVideos(ctx, page, limit).Return([]map[string]interface{}{{"ID": "123", "Views": 1000}}, nil)
 
-	resp, err := videoService.GetTopVideos(ctx, req.Page, req.Limit)
+	topVideos, err := videoService.GetTopVideos(ctx, page, limit)
 	assert.NoError(t, err)
-	assert.Len(t, resp.TopVideos, 1)
-	topVideo := resp.TopVideos[0]
+	assert.Len(t, topVideos, 1)
+	topVideo := topVideos[0]
 	id, idOk := topVideo["ID"].(string)
 	views, viewsOk := topVideo["Views"].(int)
 

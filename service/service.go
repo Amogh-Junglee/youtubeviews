@@ -5,7 +5,6 @@ import (
 	"fmt"
 
 	"youtubeviews/db"
-	"youtubeviews/models"
 
 	"github.com/redis/go-redis/v9"
 )
@@ -24,26 +23,26 @@ func CreateNewVideoService(redisClient *redis.Client, capacity int) *VideoServic
 	return &VideoService{repo: cacheRepo}
 }
 
-func (videoService *VideoService) Increment(ctx context.Context, videoId string) (models.IncrementViewResponse, error) {
+func (videoService *VideoService) Increment(ctx context.Context, videoId string) (views int, increment int, err error) {
 	// Validate that the VideoID is provided
 	if videoId == "" {
-		return models.IncrementViewResponse{}, fmt.Errorf("videoId is required")
+		return -1, -1, fmt.Errorf("videoId is required")
 	}
 
 	return videoService.repo.Increment(ctx, videoId)
 }
 
-func (videoService *VideoService) Get(ctx context.Context, videoId string) (models.ViewCountResponse, error) {
+func (videoService *VideoService) Get(ctx context.Context, videoId string) (views int, err error) {
 	if videoId == "" {
-		return models.ViewCountResponse{}, fmt.Errorf("videoId is required")
+		return -1, fmt.Errorf("videoId is required")
 	}
 
 	return videoService.repo.Get(ctx, videoId)
 }
 
-func (videoService *VideoService) GetTopVideos(ctx context.Context, page int, limit int) (models.GetTopVideosResponse, error) {
-	if page < 1{
-		return models.GetTopVideosResponse{}, fmt.Errorf("page must be greater than 0")
+func (videoService *VideoService) GetTopVideos(ctx context.Context, page int, limit int) (topVideos []map[string]interface{}, err error) {
+	if page < 1 {
+		return make([]map[string]interface{}, 0), fmt.Errorf("page must be greater than 0")
 	}
 	return videoService.repo.GetTopVideos(ctx, page, limit)
 }

@@ -97,7 +97,7 @@ func TestIncrementAndGetWithCache(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.videoID, func(t *testing.T) {
-			result, err := svc.Increment(context.Background(), tt.videoID)
+			views, _, err := svc.Increment(context.Background(), tt.videoID)
 			if err != nil {
 				t.Errorf("Increment() error = %v", err)
 			}
@@ -107,8 +107,8 @@ func TestIncrementAndGetWithCache(t *testing.T) {
 				t.Errorf("Get() error = %v", getError)
 			}
 
-			if result.Views != tt.wantViews {
-				t.Errorf("Get() = %v, want %v", result.Views, tt.wantViews)
+			if views != tt.wantViews {
+				t.Errorf("Get() = %v, want %v", views, tt.wantViews)
 			}
 		})
 	}
@@ -160,8 +160,8 @@ func TestGetTopVideosWithCache(t *testing.T) {
 				t.Fatalf("GetTopVideos() error = %v", err)
 			}
 
-			if !slicesOfMapsEqual(result.TopVideos, tt.wantVideos) {
-				t.Errorf("GetTopVideos() = %+v, want %+v", result.TopVideos, tt.wantVideos)
+			if !slicesOfMapsEqual(result, tt.wantVideos) {
+				t.Errorf("GetTopVideos() = %+v, want %+v", result, tt.wantVideos)
 				// debugDeepEqual(result.TopVideos, tt.wantVideos)
 			} else {
 				fmt.Println("GetTopVideos() matches expected output.")

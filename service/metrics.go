@@ -4,7 +4,6 @@ import (
 	"context"
 	"log"
 	"time"
-	"youtubeviews/models"
 )
 
 type MetricsService struct {
@@ -15,7 +14,7 @@ func NewMetricsService(inner Service) *MetricsService {
 	return &MetricsService{service: inner}
 }
 
-func (m *MetricsService) Increment(ctx context.Context, videoId string) (models.IncrementViewResponse, error) {
+func (m *MetricsService) Increment(ctx context.Context, videoId string) (views int, increment int, err error) {
 	startTime := time.Now()
 	defer func() {
 		duration := time.Since(startTime)
@@ -25,7 +24,7 @@ func (m *MetricsService) Increment(ctx context.Context, videoId string) (models.
 	return m.service.Increment(ctx, videoId)
 }
 
-func (m *MetricsService) Get(ctx context.Context, videoId string) (models.ViewCountResponse, error) {
+func (m *MetricsService) Get(ctx context.Context, videoId string) (views int, err error) {
 	startTime := time.Now()
 	defer func() {
 		duration := time.Since(startTime)
@@ -35,7 +34,7 @@ func (m *MetricsService) Get(ctx context.Context, videoId string) (models.ViewCo
 	return m.service.Get(ctx, videoId)
 }
 
-func (m *MetricsService) GetTopVideos(ctx context.Context, page int, limit int) (models.GetTopVideosResponse, error) {
+func (m *MetricsService) GetTopVideos(ctx context.Context, page int, limit int) (topVideos []map[string]interface{}, err error) {
 	startTime := time.Now()
 
 	resp, err := m.service.GetTopVideos(ctx, page, limit)

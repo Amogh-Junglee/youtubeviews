@@ -19,13 +19,13 @@ func NewHttpTransport(service service.Service) *HttpTransport {
 func (t *HttpTransport) Increment(writer http.ResponseWriter, request *http.Request) {
 	// Declare a variable to hold the request payload
 	var req models.IncrementPayload
-	defer request.Body.Close()
 
 	// Check if the request body is empty
 	if request.Body == nil {
 		http.Error(writer, "empty request body", http.StatusBadRequest)
 		return
 	}
+	defer request.Body.Close()
 
 	// Decode the request body into the payload struct
 	if err := json.NewDecoder(request.Body).Decode(&req); err != nil {
@@ -34,15 +34,16 @@ func (t *HttpTransport) Increment(writer http.ResponseWriter, request *http.Requ
 	}
 
 	// Call the service to increment the view count
-	response, err := t.service.Increment(request.Context(), req.VideoID)
+	views, inc, err := t.service.Increment(request.Context(), req.VideoID)
 	if err != nil {
 		http.Error(writer, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
 	// Set the response header to JSON and encode the response
+	incrementResponse := models.IncrementViewResponse{Views: views, Increment: inc}
 	writer.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(writer).Encode(response)
+	json.NewEncoder(writer).Encode(incrementResponse)
 	writer.WriteHeader(http.StatusOK)
 }
 
@@ -58,14 +59,15 @@ func (t *HttpTransport) Get(writer http.ResponseWriter, request *http.Request) {
 		return
 	}
 
-	response, err := t.service.Get(request.Context(), req.VideoID)
+	views, err := t.service.Get(request.Context(), req.VideoID)
 	if err != nil {
 		http.Error(writer, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
+	getResponse := models.ViewCountResponse{Views: views}
 	writer.Header().Set("Content-Type", "application/json")
-	if err := json.NewEncoder(writer).Encode(response); err != nil {
+	if err := json.NewEncoder(writer).Encode(getResponse); err != nil {
 		http.Error(writer, "failed to encode response", http.StatusInternalServerError)
 	}
 }
@@ -95,8 +97,9 @@ func (t *HttpTransport) GetTopVideos(writer http.ResponseWriter, request *http.R
 	}
 
 	// Set the response header to JSON and encode the response
+	topVideosResponse := models.GetTopVideosResponse{TopVideos: response}
 	writer.Header().Set("Content-Type", "application/json")
-	if err := json.NewEncoder(writer).Encode(response); err != nil {
+	if err := json.NewEncoder(writer).Encode(topVideosResponse); err != nil {
 		http.Error(writer, "failed to encode response", http.StatusInternalServerError)
 	}
 }
