@@ -1,8 +1,8 @@
 package main
 
 import (
-	"YoutubeViews/service"
-	"YoutubeViews/transport"
+	"youtubeviews/service"
+	"youtubeviews/transport"
 	"net/http"
 	"net/http/httptest"
 	"testing"

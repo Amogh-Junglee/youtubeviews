@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"YoutubeViews/models"
-	"YoutubeViews/service"
+	"youtubeviews/models"
+	"youtubeviews/service"
 )
 
 type HttpTransport struct {

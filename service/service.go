@@ -3,8 +3,8 @@ package service
 import (
 	"context"
 
-	"YoutubeViews/db"
-	"YoutubeViews/models"
+	"youtubeviews/db"
+	"youtubeviews/models"
 
 	"github.com/redis/go-redis/v9"
 )

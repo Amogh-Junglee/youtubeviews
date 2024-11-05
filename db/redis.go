@@ -1,7 +1,7 @@
 package db
 
 import (
-	"YoutubeViews/models"
+	"youtubeviews/models"
 	"context"
 
 	"github.com/redis/go-redis/v9"

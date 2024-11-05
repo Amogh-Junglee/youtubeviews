@@ -4,8 +4,8 @@ import (
 	"context"
 	"testing"
 
-	"YoutubeViews/db/mocks"
-	"YoutubeViews/models"
+	"youtubeviews/db/mocks"
+	"youtubeviews/models"
 
 	"github.com/golang/mock/gomock"
 	"github.com/redis/go-redis/v9"

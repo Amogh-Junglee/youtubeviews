@@ -5,7 +5,7 @@
 package mocks
 
 import (
-	models "YoutubeViews/models"
+	models "youtubeviews/models"
 	context "context"
 	reflect "reflect"
 

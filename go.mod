@@ -1,4 +1,4 @@
-module YoutubeViews
+module youtubeviews
 
 go 1.23.0
 

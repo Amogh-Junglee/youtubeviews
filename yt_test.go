@@ -1,8 +1,8 @@
 package main
 
 import (
-	models "YoutubeViews/models"
-	service "YoutubeViews/service"
+	models "youtubeviews/models"
+	service "youtubeviews/service"
 	"context"
 	"fmt"
 	"reflect"

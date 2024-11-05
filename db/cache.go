@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"log"
 
-	"YoutubeViews/models"
+	"youtubeviews/models"
 )
 
 type CacheRepo struct {
