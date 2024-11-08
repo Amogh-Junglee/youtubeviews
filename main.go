@@ -8,6 +8,7 @@ import (
 	"net/http"
 
 	"github.com/redis/go-redis/v9"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
 func main() {
@@ -29,6 +30,7 @@ func main() {
 	http.HandleFunc("/increment", transport.Increment)
 	http.HandleFunc("/get", transport.Get)
 	http.HandleFunc("/top-videos", transport.GetTopVideos)
+	http.Handle("/metrics", promhttp.Handler())
 
 	log.Println("Server is running on :8080")
 	log.Fatal(http.ListenAndServe(":8080", nil))

@@ -36,7 +36,7 @@ func (r *RedisRepo) Get(ctx context.Context, videoId string) (views int, err err
 	// Fetch view count from Redis
 	count, err := r.client.ZScore(ctx, "video_views", videoId).Result()
 	if err == redis.Nil {
-		return -1, nil // video not found
+		return 0, nil // video not found
 	} else if err != nil {
 		return -1, err
 	}
